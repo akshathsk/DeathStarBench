@@ -11,14 +11,14 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def main():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 9090)
+  socket = TSocket.TSocket("localhost", 10008)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = UniqueIdService.Client(protocol)
 
   transport.open()
   req_id = uuid.uuid4().int & (1<<32)
-  print(client.UploadUniqueId(req_id, PostType.POST, {}))
+  print(client.ComposeUniqueId(req_id, PostType.POST, {}))
   transport.close()
 
 if __name__ == '__main__':

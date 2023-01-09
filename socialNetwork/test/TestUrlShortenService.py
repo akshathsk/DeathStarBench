@@ -11,7 +11,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def main():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 9090)
+  socket = TSocket.TSocket("localhost", 10004)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = UrlShortenService.Client(protocol)
@@ -21,7 +21,7 @@ def main():
 
   urls = ["https://url_0.com", "https://url_1.com", "https://url_2.com"]
 
-  print(client.UploadUrls(req_id, urls, {}))
+  print(client.ComposeUrls(req_id, urls, {}))
   transport.close()
 
 if __name__ == '__main__':

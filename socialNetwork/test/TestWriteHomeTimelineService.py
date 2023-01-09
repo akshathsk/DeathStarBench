@@ -4,7 +4,7 @@ import json
 
 credentials = pika.PlainCredentials('guest', 'guest')
 connection = pika.BlockingConnection(
-  pika.ConnectionParameters(host='ath-8.ece.cornell.edu', credentials=credentials))
+  pika.ConnectionParameters(host='localhost', credentials=credentials))
 channel = connection.channel()
 
 channel.queue_declare(queue='write-home-timeline', durable=True)

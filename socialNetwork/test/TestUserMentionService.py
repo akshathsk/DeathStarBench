@@ -10,7 +10,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def main():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 9090)
+  socket = TSocket.TSocket("localhost", 10009)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = UserMentionService.Client(protocol)
@@ -20,7 +20,7 @@ def main():
 
   user_mentions = ["username_0", "username_1", "username_2"]
 
-  print(client.UploadUserMentions(req_id, user_mentions, {}))
+  print(client.ComposeUserMentions(req_id, user_mentions, {}))
   transport.close()
 
 if __name__ == '__main__':

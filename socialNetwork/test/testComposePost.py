@@ -16,7 +16,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def main():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10001)
+  socket = TSocket.TSocket("localhost", 10001)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = ComposePostService.Client(protocol)
@@ -37,12 +37,7 @@ def main():
   user_mention_1 = UserMention(user_id=2, username="user_2")
 
   user_mentions = [user_mention_0 ,user_mention_1]
-  client.UploadText(req_id, text, {})
-  client.UploadMedia(req_id, medias, {})
-  client.UploadUniqueId(req_id, post_id, post_type, {})
-  client.UploadCreator(req_id, creator, {})
-  client.UploadUrls(req_id, urls, {})
-  client.UploadUserMentions(req_id, user_mentions, {})
+  client.ComposePost(req_id, "user_0", 0, text, [0, 1], ["png", "png"], post_type, {})
   transport.close()
 
 if __name__ == '__main__':
