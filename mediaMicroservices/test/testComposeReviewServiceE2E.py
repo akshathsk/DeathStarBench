@@ -19,7 +19,7 @@ from multiprocessing import Process
 
 
 def register_movies():
-  movie_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10002)
+  movie_id_socket = TSocket.TSocket("localhost", 10002)
   movie_id_transport = TTransport.TFramedTransport(movie_id_socket)
   movie_id_protocol = TBinaryProtocol.TBinaryProtocol(movie_id_transport)
   movie_id_client = MovieIdService.Client(movie_id_protocol)
@@ -33,7 +33,7 @@ def register_movies():
   movie_id_transport.close()
 
 def register_users():
-  user_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10005)
+  user_socket = TSocket.TSocket("localhost", 10005)
   user_transport = TTransport.TFramedTransport(user_socket)
   user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
   user_client = UserService.Client(user_protocol)
@@ -73,22 +73,22 @@ def worker():
   # user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
   # user_client = UserService.Client(user_protocol)
 
-  text_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10003)
+  text_socket = TSocket.TSocket("localhost", 10003)
   text_transport = TTransport.TFramedTransport(text_socket)
   text_protocol = TBinaryProtocol.TBinaryProtocol(text_transport)
   text_client = TextService.Client(text_protocol)
 
-  unique_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10001)
+  unique_id_socket = TSocket.TSocket("localhost", 10001)
   unique_id_transport = TTransport.TFramedTransport(unique_id_socket)
   unique_id_protocol = TBinaryProtocol.TBinaryProtocol(unique_id_transport)
   unique_id_client = UniqueIdService.Client(unique_id_protocol)
 
-  movie_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10002)
+  movie_id_socket = TSocket.TSocket("localhost", 10002)
   movie_id_transport = TTransport.TFramedTransport(movie_id_socket)
   movie_id_protocol = TBinaryProtocol.TBinaryProtocol(movie_id_transport)
   movie_id_client = MovieIdService.Client(movie_id_protocol)
 
-  user_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10005)
+  user_socket = TSocket.TSocket("localhost", 10005)
   user_transport = TTransport.TFramedTransport(user_socket)
   user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
   user_client = UserService.Client(user_protocol)

@@ -12,7 +12,7 @@ import random
 import string
 
 def main():
-    socket = TSocket.TSocket("ath-8.ece.cornell.edu", 9090)
+    socket = TSocket.TSocket("localhost", 10001)
     transport = TTransport.TFramedTransport(socket)
     protocol = TBinaryProtocol.TBinaryProtocol(transport)
     client = UniqueIdService.Client(protocol)
@@ -20,7 +20,7 @@ def main():
     transport.open()
     for i in range (1, 100) :
         req_id = random.getrandbits(64) - 2**63
-        client.UploadUniqueId(req_id)
+        client.UploadUniqueId(req_id, {})
 
     transport.close()
 

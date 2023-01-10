@@ -13,7 +13,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def wrtie_movie_info():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10012)
+  socket = TSocket.TSocket("localhost", 10012)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = MovieInfoService.Client(protocol)
@@ -43,7 +43,7 @@ def wrtie_movie_info():
   transport.close()
 
 def read_movie_info():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10012)
+  socket = TSocket.TSocket("localhost", 10012)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = MovieInfoService.Client(protocol)

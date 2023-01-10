@@ -15,7 +15,7 @@ import string
 from time import time
 
 def write_review():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10007)
+  socket = TSocket.TSocket("localhost", 10007)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = ReviewStorageService.Client(protocol)
@@ -45,7 +45,7 @@ def write_review():
   transport.close()
 
 def read_reviews():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10007)
+  socket = TSocket.TSocket("localhost", 10007)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = ReviewStorageService.Client(protocol)

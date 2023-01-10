@@ -24,7 +24,7 @@ void worker (memcached_pool_st *client_pool) {
 
 int main() {
   for (int j = 0; j < 100; j++){
-    string addr = "ath-8.ece.cornell.edu";
+    string addr = "localhost";
     int port = 20000;
     string config_str = "--SERVER=" + addr + ":" + std::to_string(port);
     auto memcached_client = memcached(config_str.c_str(), config_str.length());

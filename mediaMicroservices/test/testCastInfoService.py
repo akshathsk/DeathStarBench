@@ -12,7 +12,7 @@ from thrift.protocol import TBinaryProtocol
 
 
 def wrtie_cast_info():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10010)
+  socket = TSocket.TSocket("localhost", 10010)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = CastInfoService.Client(protocol)
@@ -28,7 +28,7 @@ def wrtie_cast_info():
   transport.close()
 
 def read_cast_info():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10010)
+  socket = TSocket.TSocket("localhost", 10010)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = CastInfoService.Client(protocol)

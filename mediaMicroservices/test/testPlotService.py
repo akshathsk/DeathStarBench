@@ -12,7 +12,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
 def wrtie_plot():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10011)
+  socket = TSocket.TSocket("localhost", 10011)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = PlotService.Client(protocol)
@@ -27,7 +27,7 @@ def wrtie_plot():
   transport.close()
 
 def read_plot():
-  socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10011)
+  socket = TSocket.TSocket("localhost", 10011)
   transport = TTransport.TFramedTransport(socket)
   protocol = TBinaryProtocol.TBinaryProtocol(transport)
   client = PlotService.Client(protocol)
