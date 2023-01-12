@@ -9,37 +9,37 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-def main():
-  socket = TSocket.TSocket("localhost", 10000)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = SocialGraphService.Client(protocol)
+import unittest
 
-  transport.open()
-  req_id = uuid.uuid4().int & (1<<32)
-  client.Follow(req_id, 0, 1, {})
-  client.Follow(req_id, 0, 2, {})
-  client.Follow(req_id, 1, 2, {})
-  client.Follow(req_id, 1, 0, {})
-  client.Follow(req_id, 2, 1, {})
-  client.Follow(req_id, 2, 0, {})
-  client.Follow(req_id, 2, 0, {})
-  client.Unfollow(req_id, 1, 0, {})
-  client.Unfollow(req_id, 1, 2, {})
-  client.Follow(req_id, 1, 0, {})
-  client.Follow(req_id, 1, 2, {})
+class TestSocialGraph(unittest.TestCase):
+  def test_SocialGraph(self):
+    socket = TSocket.TSocket("localhost", 10000)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = SocialGraphService.Client(protocol)
 
-  print(client.GetFollowers(req_id, 0, {}))
-  print(client.GetFollowers(req_id, 1, {}))
-  print(client.GetFollowers(req_id, 2, {}))
-  print(client.GetFollowees(req_id, 0, {}))
-  print(client.GetFollowees(req_id, 1, {}))
-  print(client.GetFollowees(req_id, 2, {}))
+    transport.open()
+    req_id = uuid.uuid4().int & (1<<32)
+    client.Follow(req_id, 0, 1, {})
+    client.Follow(req_id, 0, 2, {})
+    client.Follow(req_id, 1, 2, {})
+    client.Follow(req_id, 1, 0, {})
+    client.Follow(req_id, 2, 1, {})
+    client.Follow(req_id, 2, 0, {})
+    client.Follow(req_id, 2, 0, {})
+    client.Unfollow(req_id, 1, 0, {})
+    client.Unfollow(req_id, 1, 2, {})
+    client.Follow(req_id, 1, 0, {})
+    client.Follow(req_id, 1, 2, {})
 
-  transport.close()
+    print(client.GetFollowers(req_id, 0, {}))
+    print(client.GetFollowers(req_id, 1, {}))
+    print(client.GetFollowers(req_id, 2, {}))
+    print(client.GetFollowees(req_id, 0, {}))
+    print(client.GetFollowees(req_id, 1, {}))
+    print(client.GetFollowees(req_id, 2, {}))
+
+    transport.close()
 
 if __name__ == '__main__':
-  try:
-    main()
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

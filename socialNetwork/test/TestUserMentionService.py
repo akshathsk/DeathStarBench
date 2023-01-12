@@ -9,22 +9,22 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-def main():
-  socket = TSocket.TSocket("localhost", 10009)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = UserMentionService.Client(protocol)
+import unittest
 
-  transport.open()
-  req_id = uuid.uuid4().int & 0X7FFFFFFFFFFFFFFF
+class TestUserMentionService(unittest.TestCase):
+  def test_UserMentionService(self):
+    socket = TSocket.TSocket("localhost", 10009)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = UserMentionService.Client(protocol)
 
-  user_mentions = ["username_0", "username_1", "username_2"]
+    transport.open()
+    req_id = uuid.uuid4().int & 0X7FFFFFFFFFFFFFFF
 
-  print(client.ComposeUserMentions(req_id, user_mentions, {}))
-  transport.close()
+    user_mentions = ["username_0", "username_1", "username_2"]
+
+    print(client.ComposeUserMentions(req_id, user_mentions, {}))
+    transport.close()
 
 if __name__ == '__main__':
-  try:
-    main()
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

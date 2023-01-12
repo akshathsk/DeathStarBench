@@ -10,22 +10,22 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-def main():
-  socket = TSocket.TSocket("localhost", 10004)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = UrlShortenService.Client(protocol)
+import unittest
 
-  transport.open()
-  req_id = uuid.uuid4().int & ( 1 << 32 )
+class TestUrlShortenService(unittest.TestCase):
+  def test_UrlShortenService(self):
+    socket = TSocket.TSocket("localhost", 10004)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = UrlShortenService.Client(protocol)
 
-  urls = ["https://url_0.com", "https://url_1.com", "https://url_2.com"]
+    transport.open()
+    req_id = uuid.uuid4().int & ( 1 << 32 )
 
-  print(client.ComposeUrls(req_id, urls, {}))
-  transport.close()
+    urls = ["https://url_0.com", "https://url_1.com", "https://url_2.com"]
+
+    print(client.ComposeUrls(req_id, urls, {}))
+    transport.close()
 
 if __name__ == '__main__':
-  try:
-    main()
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

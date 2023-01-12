@@ -10,19 +10,19 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-def main():
-  socket = TSocket.TSocket("localhost", 10008)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = UniqueIdService.Client(protocol)
+import unittest
 
-  transport.open()
-  req_id = uuid.uuid4().int & (1<<32)
-  print(client.ComposeUniqueId(req_id, PostType.POST, {}))
-  transport.close()
+class TestUniqueIdService(unittest.TestCase):
+  def test_UniqueIdService(self):
+    socket = TSocket.TSocket("localhost", 10008)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = UniqueIdService.Client(protocol)
+
+    transport.open()
+    req_id = uuid.uuid4().int & (1<<32)
+    print(client.ComposeUniqueId(req_id, PostType.POST, {}))
+    transport.close()
 
 if __name__ == '__main__':
-  try:
-    main()
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()
