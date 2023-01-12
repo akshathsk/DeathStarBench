@@ -11,33 +11,33 @@ from thrift.protocol import TBinaryProtocol
 import random
 import string
 
-def main():
-    # Make socket
-    socket = TSocket.TSocket("localhost", 10003)
+import unittest
 
-    # Buffering is critical. Raw sockets are very slow
-    transport = TTransport.TFramedTransport(socket)
+class TestTextService(unittest.TestCase):
+    def test_TextService(self):
+        # Make socket
+        socket = TSocket.TSocket("localhost", 10003)
 
-    # Wrap in a protocol
-    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        # Buffering is critical. Raw sockets are very slow
+        transport = TTransport.TFramedTransport(socket)
 
-    # Create a client to use the protocol encoder
-    client = TextService.Client(protocol)
+        # Wrap in a protocol
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
-    # Connect!
+        # Create a client to use the protocol encoder
+        client = TextService.Client(protocol)
+
+        # Connect!
 
 
-    transport.open()
-    for i in range (1, 2):
-        req_id = random.getrandbits(64) - 2**63
-        text = ''.join(random.choices(string.ascii_lowercase + string.digits, k=128))
-        client.UploadText(req_id, text, {})
+        transport.open()
+        for i in range (1, 2):
+            req_id = random.getrandbits(64) - 2**63
+            text = ''.join(random.choices(string.ascii_lowercase + string.digits, k=128))
+            client.UploadText(req_id, text, {})
 
-    transport.close()
+        transport.close()
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Thrift.TException as tx:
-        print('%s' % tx.message)
+    unittest.main()

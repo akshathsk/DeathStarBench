@@ -12,26 +12,24 @@ from thrift.protocol import TBinaryProtocol
 import random
 import string
 
-def upload_rating():
-  socket = TSocket.TSocket("localhost", 10004)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = RatingService.Client(protocol)
+import unittest
 
-  transport.open()
-  for i in range (1, 100):
-    req_id = random.getrandbits(63)
-    movie_id = "movie_id_" + str(random.randint(0, 4))
-    rating = random.randint(0, 10)
-    client.UploadRating(req_id, movie_id, rating, {})
+class TestRatingService(unittest.TestCase):
+  def test_upload_rating(self):
+    socket = TSocket.TSocket("localhost", 10004)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = RatingService.Client(protocol)
 
-  transport.close()
+    transport.open()
+    for i in range (1, 100):
+      req_id = random.getrandbits(63)
+      movie_id = "movie_id_" + str(random.randint(0, 4))
+      rating = random.randint(0, 10)
+      client.UploadRating(req_id, movie_id, rating, {})
+
+    transport.close()
 
 
 if __name__ == '__main__':
-  try:
-    upload_rating()
-  except ServiceException as se:
-    print('%s' % se.message)
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

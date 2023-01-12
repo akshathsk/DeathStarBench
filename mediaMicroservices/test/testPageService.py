@@ -10,23 +10,21 @@ from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 
-def read_page():
-  socket = TSocket.TSocket("localhost", 9090)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = PageService.Client(protocol)
+import unittest
 
-  transport.open()
-  for i in range(100):
-    req_id = random.getrandbits(63)
-    movie_id = "movie_id_" + str(i)
-    print(client.ReadPage(req_id, movie_id, 0, 10, {}))
-  transport.close()
+class TestPageService(unittest.TestCase):
+  def test_read_page(self):
+    socket = TSocket.TSocket("localhost", 9090)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = PageService.Client(protocol)
+
+    transport.open()
+    for i in range(100):
+      req_id = random.getrandbits(63)
+      movie_id = "movie_id_" + str(i)
+      print(client.ReadPage(req_id, movie_id, 0, 10, {}))
+    transport.close()
 
 if __name__ == '__main__':
-  try:
-    read_page()
-  except ServiceException as se:
-    print('%s' % se.message)
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

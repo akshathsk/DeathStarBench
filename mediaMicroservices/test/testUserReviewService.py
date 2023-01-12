@@ -12,42 +12,39 @@ from thrift.protocol import TBinaryProtocol
 import random
 from time import time
 
-def write_user_review():
-  socket = TSocket.TSocket("localhost", 10008)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = UserReviewService.Client(protocol)
+import unittest
 
-  transport.open()
-  for i in range(0, 100):
-    req_id = random.getrandbits(63)
-    timestamp = int(time() * 1000)
-    user_id = random.randint(0, 5)
-    client.UploadUserReview(req_id, user_id, i, timestamp, {})
-  transport.close()
+class TestUserReviewService(unittest.TestCase):
+  def test_write_user_review(self):
+    socket = TSocket.TSocket("localhost", 10008)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = UserReviewService.Client(protocol)
 
-def read_user_reviews():
-  socket = TSocket.TSocket("localhost", 10008)
-  transport = TTransport.TFramedTransport(socket)
-  protocol = TBinaryProtocol.TBinaryProtocol(transport)
-  client = UserReviewService.Client(protocol)
+    transport.open()
+    for i in range(0, 100):
+      req_id = random.getrandbits(63)
+      timestamp = int(time() * 1000)
+      user_id = random.randint(0, 5)
+      client.UploadUserReview(req_id, user_id, i, timestamp, {})
+    transport.close()
 
-  transport.open()
-  for i in range(100):
-    req_id = random.getrandbits(63)
-    user_id = random.randint(0, 5)
-    start = random.randint(0, 10)
-    stop = start + random.randint(1, 10)
+  def test_read_user_reviews(self):
+    socket = TSocket.TSocket("localhost", 10008)
+    transport = TTransport.TFramedTransport(socket)
+    protocol = TBinaryProtocol.TBinaryProtocol(transport)
+    client = UserReviewService.Client(protocol)
 
-    print(client.ReadUserReviews(req_id, user_id, start, stop, {}))
-  transport.close()
+    transport.open()
+    for i in range(100):
+      req_id = random.getrandbits(63)
+      user_id = random.randint(0, 5)
+      start = random.randint(0, 10)
+      stop = start + random.randint(1, 10)
+
+      print(client.ReadUserReviews(req_id, user_id, start, stop, {}))
+    transport.close()
 
 
 if __name__ == '__main__':
-  try:
-    write_user_review()
-    read_user_reviews()
-  except ServiceException as se:
-    print('%s' % se.message)
-  except Thrift.TException as tx:
-    print('%s' % tx.message)
+  unittest.main()

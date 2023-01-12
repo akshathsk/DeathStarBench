@@ -11,22 +11,22 @@ from thrift.protocol import TBinaryProtocol
 import random
 import string
 
-def main():
-    socket = TSocket.TSocket("localhost", 10001)
-    transport = TTransport.TFramedTransport(socket)
-    protocol = TBinaryProtocol.TBinaryProtocol(transport)
-    client = UniqueIdService.Client(protocol)
+import unittest
 
-    transport.open()
-    for i in range (1, 100) :
-        req_id = random.getrandbits(64) - 2**63
-        client.UploadUniqueId(req_id, {})
+class TestUniqueIdService(unittest.TestCase):
+    def test_UniqueIdService():
+        socket = TSocket.TSocket("localhost", 10001)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = UniqueIdService.Client(protocol)
 
-    transport.close()
+        transport.open()
+        for i in range (1, 100) :
+            req_id = random.getrandbits(64) - 2**63
+            client.UploadUniqueId(req_id, {})
+
+        transport.close()
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Thrift.TException as tx:
-        print('%s' % tx.message)
+    unittest.main()
