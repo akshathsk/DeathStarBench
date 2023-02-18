@@ -1,47 +1,91 @@
+import random
+import uuid
 import sys
 sys.path.append('../gen-py')
 
-import random
-from social_network import ComposePostService
-from social_network.ttypes import Media
-from social_network.ttypes import PostType
-from social_network.ttypes import Creator
-from social_network.ttypes import Url
-from social_network.ttypes import UserMention
-
-
-from thrift import Thrift
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
-
 import unittest
+from social_network import HomeTimelineService
+from social_network import UserService
+from thrift.protocol import TBinaryProtocol
+from thrift.transport import TTransport
+from thrift.transport import TSocket
+from thrift import Thrift
+from social_network.ttypes import PostType
+from social_network import ComposePostService
 
 class TestComposePost(unittest.TestCase):
-  def test_ComposePost(self):
-    socket = TSocket.TSocket("localhost", 10001)
-    transport = TTransport.TFramedTransport(socket)
-    protocol = TBinaryProtocol.TBinaryProtocol(transport)
-    client = ComposePostService.Client(protocol)
 
-    transport.open()
-    req_id = random.getrandbits(63)
-    text = "HelloWorld"
-    media_0 = Media(media_id=0, media_type="png")
-    media_1 = Media(media_id=1, media_type="png")
-    medias = [media_0, media_1]
-    post_id = random.getrandbits(63)
-    post_type = PostType.POST
-    creator = Creator(username="user_0", user_id=0)
-    url_0 = Url(shortened_url="shortened_url_0", expanded_url="expanded_url_0")
-    url_1 = Url(shortened_url="shortened_url_1", expanded_url="expanded_url_1")
-    urls = [url_0, url_1]
-    user_mention_0 = UserMention(user_id=1, username="user_1")
-    user_mention_1 = UserMention(user_id=2, username="user_2")
+    num = str(random.random())
+    numOther = str(random.random())
+    userId = 0
+    otherUserId = 0
 
-    user_mentions = [user_mention_0 ,user_mention_1]
-    client.ComposePost(req_id, "user_0", 0, text, [0, 1], ["png", "png"], post_type, {})
-    transport.close()
+    # Register a new user
+    def test1(self):
+        socket = TSocket.TSocket("localhost", 10005)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = UserService.Client(protocol)
+        transport.open()
+        req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
+        client.RegisterUser(req_id, "first_name_" + self.num, "last_name_" + self.num,
+                            "username_" + self.num, "password_0", {})
+        client.RegisterUser(req_id, "first_name_" + self.numOther, "last_name_" + self.numOther,
+                            "username_" + self.numOther, "password_0", {})
+        self.assertTrue
+        transport.close()
+
+    # Login with the same registered user
+    def test2(self):
+        socket = TSocket.TSocket("localhost", 10005)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = UserService.Client(protocol)
+        transport.open()
+        req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
+        self.assertIsNotNone(client.Login(
+            req_id, "username_" + self.num, "password_0", {}))
+        transport.close()
+
+    # Check if id is auto generated for the new user
+    def test3(self):
+        socket = TSocket.TSocket("localhost", 10005)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = UserService.Client(protocol)
+        transport.open()
+        req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
+        self.userId = client.GetUserId(req_id, "username_" + self.num, {})
+        self.otherUserId = client.GetUserId(req_id, "username_" + self.numOther, {})
+        self.assertIsNotNone(id)
+        transport.close()
+
+    # Compose post
+    def test4(self):
+        socket = TSocket.TSocket("localhost", 10001)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = ComposePostService.Client(protocol)
+        transport.open()
+        req_id = random.getrandbits(63)
+        client.ComposePost(req_id, "username_" + self.num, self.userId,
+                           "HelloWorld", [0, 1], ["png", "png"], PostType.POST, {})
+        transport.close()
+
+    # Read Home's timeline to check for the post
+    def test5(self):
+        socket = TSocket.TSocket("localhost", 10010)
+        transport = TTransport.TFramedTransport(socket)
+        protocol = TBinaryProtocol.TBinaryProtocol(transport)
+        client = HomeTimelineService.Client(protocol)
+        transport.open()
+        req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
+        start = 0
+        stop = 10
+        list = client.ReadHomeTimeline(req_id, self.otherUserId, start, stop, {})
+        self.assertTrue(len(list) > 0)
+        transport.close()
+
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()
