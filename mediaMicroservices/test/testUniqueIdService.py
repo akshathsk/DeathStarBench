@@ -14,7 +14,9 @@ import string
 import unittest
 
 class TestUniqueIdService(unittest.TestCase):
-    def test_UniqueIdService():
+
+    # Store uniqueId
+    def test1(self):
         socket = TSocket.TSocket("localhost", 10001)
         transport = TTransport.TFramedTransport(socket)
         protocol = TBinaryProtocol.TBinaryProtocol(transport)

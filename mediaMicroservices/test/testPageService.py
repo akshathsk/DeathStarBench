@@ -12,6 +12,7 @@ from thrift.protocol import TBinaryProtocol
 
 import unittest
 
+# Docker should be fixed to run this test
 class TestPageService(unittest.TestCase):
   def test_read_page(self):
     socket = TSocket.TSocket("localhost", 9090)
