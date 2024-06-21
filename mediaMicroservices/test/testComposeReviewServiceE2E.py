@@ -19,7 +19,7 @@ from multiprocessing import Process
 
 
 def register_movies():
-  movie_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10002)
+  movie_id_socket = TSocket.TSocket("localhost", 10002)
   movie_id_transport = TTransport.TFramedTransport(movie_id_socket)
   movie_id_protocol = TBinaryProtocol.TBinaryProtocol(movie_id_transport)
   movie_id_client = MovieIdService.Client(movie_id_protocol)
@@ -28,12 +28,13 @@ def register_movies():
   for i in range(100):
     req_id = random.getrandbits(63)
     title = "movie_title_" + str(i)
-    movie_id = "movie_id_" + str(i)
+    movie_id = "movie_id_" + str(random.randint(1000, 100000) + random.randint(
+                1, 100000) + random.randint(2000, 100000) + random.randint(2000, 100000) + random.randint(2000, 100000))
     movie_id_client.RegisterMovieId(req_id, title, movie_id, {})
   movie_id_transport.close()
 
 def register_users():
-  user_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10005)
+  user_socket = TSocket.TSocket("localhost", 10005)
   user_transport = TTransport.TFramedTransport(user_socket)
   user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
   user_client = UserService.Client(user_protocol)
@@ -48,47 +49,23 @@ def register_users():
   user_transport.close()
 
 def worker():
-  # text_socket = TSocket.TSocket("text-service", 9090)
-  # text_transport = TTransport.TFramedTransport(text_socket)
-  # text_protocol = TBinaryProtocol.TBinaryProtocol(text_transport)
-  # text_client = TextService.Client(text_protocol)
-  #
-  # unique_id_socket = TSocket.TSocket("unique-id-service", 9090)
-  # unique_id_transport = TTransport.TFramedTransport(unique_id_socket)
-  # unique_id_protocol = TBinaryProtocol.TBinaryProtocol(unique_id_transport)
-  # unique_id_client = UniqueIdService.Client(unique_id_protocol)
-  #
-  # rating_socket = TSocket.TSocket("rating-service", 9090)
-  # rating_transport = TTransport.TFramedTransport(rating_socket)
-  # rating_protocol = TBinaryProtocol.TBinaryProtocol(rating_transport)
-  # rating_client = RatingService.Client(rating_protocol)
-  #
-  # movie_id_socket = TSocket.TSocket("movie-id-service", 9090)
-  # movie_id_transport = TTransport.TFramedTransport(movie_id_socket)
-  # movie_id_protocol = TBinaryProtocol.TBinaryProtocol(movie_id_transport)
-  # movie_id_client = MovieIdService.Client(movie_id_protocol)
-  #
-  # user_socket = TSocket.TSocket("user-service", 9090)
-  # user_transport = TTransport.TFramedTransport(user_socket)
-  # user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
-  # user_client = UserService.Client(user_protocol)
 
-  text_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10003)
+  text_socket = TSocket.TSocket("localhost", 10003)
   text_transport = TTransport.TFramedTransport(text_socket)
   text_protocol = TBinaryProtocol.TBinaryProtocol(text_transport)
   text_client = TextService.Client(text_protocol)
 
-  unique_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10001)
+  unique_id_socket = TSocket.TSocket("localhost", 10001)
   unique_id_transport = TTransport.TFramedTransport(unique_id_socket)
   unique_id_protocol = TBinaryProtocol.TBinaryProtocol(unique_id_transport)
   unique_id_client = UniqueIdService.Client(unique_id_protocol)
 
-  movie_id_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10002)
+  movie_id_socket = TSocket.TSocket("localhost", 10002)
   movie_id_transport = TTransport.TFramedTransport(movie_id_socket)
   movie_id_protocol = TBinaryProtocol.TBinaryProtocol(movie_id_transport)
   movie_id_client = MovieIdService.Client(movie_id_protocol)
 
-  user_socket = TSocket.TSocket("ath-8.ece.cornell.edu", 10005)
+  user_socket = TSocket.TSocket("localhost", 10005)
   user_transport = TTransport.TFramedTransport(user_socket)
   user_protocol = TBinaryProtocol.TBinaryProtocol(user_transport)
   user_client = UserService.Client(user_protocol)
