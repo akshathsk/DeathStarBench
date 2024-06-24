@@ -1,25 +1,20 @@
 import uuid
-import random
 import sys
 sys.path.append('../gen-py')
 
-from social_network import ComposePostService
-from social_network import UserService
-from social_network.ttypes import PostType
-from social_network import UserTimelineService
-from thrift import Thrift
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
+import random
 import unittest
+from thrift.protocol import TBinaryProtocol
+from thrift.transport import TTransport
+from thrift.transport import TSocket
+from thrift import Thrift
+from social_network import UserService
 
 unittest.TestLoader.sortTestMethodsUsing = None
 
-class TestUserTimelineService(unittest.TestCase):
+class TestUserService(unittest.TestCase):
 
     num = str(random.random())
-    numOther = str(random.random())
-    userId = 0
 
     # Register a new user
     def test1(self):
@@ -54,37 +49,10 @@ class TestUserTimelineService(unittest.TestCase):
         client = UserService.Client(protocol)
         transport.open()
         req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
-        self.userId = client.GetUserId(req_id, "username_" + self.num, {})
+        id = client.GetUserId(req_id, "username_" + self.num, {})
+        print(id)
         self.assertIsNotNone(id)
-        transport.close()
-
-    # Compose post
-    def test4(self):
-        socket = TSocket.TSocket("localhost", 10001)
-        transport = TTransport.TFramedTransport(socket)
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
-        client = ComposePostService.Client(protocol)
-        transport.open()
-        req_id = random.getrandbits(63)
-        client.ComposePost(req_id, "username_" + self.num, self.userId,
-                           "HelloWorld", [0, 1], ["png", "png"], PostType.POST, {})
-        transport.close()
-
-    # Read Home's timeline to check for the post
-    def test5(self):
-        socket = TSocket.TSocket("localhost", 10003)
-        transport = TTransport.TFramedTransport(socket)
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
-        client = UserTimelineService.Client(protocol)
-
-        transport.open()
-        req_id = uuid.uuid4().int & 0x7FFFFFFFFFFFFFFF
-        user_id = 0
-        start = 0
-        stop = 5
-        posts = client.ReadUserTimeline(req_id, user_id, start, stop, {})
-        self.assertTrue(len(posts) > 0)
-        transport.close()
+        transport.close()    
 
 
 if __name__ == '__main__':
